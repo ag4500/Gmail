@@ -53,8 +53,6 @@ function Inbox(props) {
       method: "get",
       headers: {
         token: tokenValue,
-        // "The-number-of-email": "1",
-        // User: user,
       }
     })
       .then((response) => {
