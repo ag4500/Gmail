@@ -31,27 +31,31 @@ function Inbox(props) {
   const [page, setPage] = useState(0);
   const [inbox, setInboxes] = useState([]);
   const splitData = location.search.split("&")[0];
-  const tokenValue = splitData.split("=")[1];
   // const refreshToken=location.search.split("&")[1].split("=")[1]
   const user = location?.search?.split("&")[2]?.split("=")[1];
   const dataRefreshToken = () => {
-    //if refresh Token is available we send it on
     fetch("http://gmapi.mangoitsol.com/getRefreshToken")
       .then((response) => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+         //here if  we get a token then we set a new token in localstorage
+        fetchData();
       });
   };
   const fetchData = () => {
-    fetch("http://gmapi.mangoitsol.com/inbox", {
+    let tokenValue = localStorage.getItem("token");
+    let params={
+      User:user,
+      "The-number-of-email":5
+    }
+    fetch(`http://gmapi.mangoitsol.com/inbox?The-number-of-email=${10}&User=${user}`, {
       method: "get",
       headers: {
         token: tokenValue,
-        "The-number-of-email": "1",
-        User: user,
-      },
+        // "The-number-of-email": "1",
+        // User: user,
+      }
     })
       .then((response) => {
         return response.json();
@@ -71,7 +75,9 @@ function Inbox(props) {
         return response.json();
       })
       .then((data) => {
-        !data.status && dataRefreshToken();
+        if (!data.status) {
+          dataRefreshToken();
+        }
       });
   };
   const handleChangePage = (e, newPage) => {
@@ -91,6 +97,8 @@ function Inbox(props) {
   };
 
   useEffect(() => {
+    localStorage.setItem("token", splitData.split("=")[1]);
+
     fetchData();
   }, []);
   return (
