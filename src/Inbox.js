@@ -45,10 +45,6 @@ function Inbox(props) {
   };
   const fetchData = () => {
     let tokenValue = localStorage.getItem("token");
-    let params={
-      User:user,
-      "The-number-of-email":5
-    }
     fetch(`http://gmapi.mangoitsol.com/inbox?The-number-of-email=${10}&User=${user}`, {
       method: "get",
       headers: {
